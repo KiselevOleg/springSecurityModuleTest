@@ -3,10 +3,7 @@ package com.test.spring_security_module_test.controller;
 import com.test.spring_security_module_test.model.Developer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -35,4 +32,24 @@ public class DeveloperRestController {
             .findFirst()
             .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found this developer"));
     }
+
+    @PostMapping("")
+    public ResponseEntity<?> create(@RequestBody final Developer developer) {
+        if (developers.stream().noneMatch(e -> e.getId().equals(developer.getId()))) {
+            developers.add(developer);
+            return ResponseEntity.status(HttpStatus.OK).body("success\n");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there already exists used id\n");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable final Long id) {
+        if (developers.removeIf(developer -> developer.getId().equals(id))) {
+            return ResponseEntity.status(HttpStatus.OK).body("success\n");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there does not exist used id\n");
+        }
+    }
+
 }
