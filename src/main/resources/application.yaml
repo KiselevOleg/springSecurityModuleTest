@@ -1,1 +1,5 @@
-
+security:
+    user:
+        name: main_user
+        password: password
+        role: main_role
