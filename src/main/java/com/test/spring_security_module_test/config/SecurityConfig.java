@@ -1,19 +1,19 @@
 package com.test.spring_security_module_test.config;
 
-import com.test.spring_security_module_test.model.Permision;
-import com.test.spring_security_module_test.model.Role;
+import com.test.spring_security_module_test.security.consts.PermissionName;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -25,15 +25,22 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 //@EnableGlobalMethodSecurity
 public class SecurityConfig {
+    private final UserDetailsService userDetailsService;
+
+    @Autowired
+    public SecurityConfig(final @Qualifier("userDetailsServiceDatabase") UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/**").hasAuthority(Permision.DEVELOPERS_READ.getPermision())
-                .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority(Permision.DEVELOPERS_WRITE.getPermision())
-                .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(Permision.DEVELOPERS_WRITE.getPermision())
+                .requestMatchers(HttpMethod.GET, "/api/**").hasAuthority(PermissionName.DEVELOPER_READ.getName())
+                .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
+                .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -56,29 +63,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User//.withDefaultPasswordEncoder()
-            .withUsername("admin")
-            .password(passwordEncoder().encode("admin"))
-            //.roles(Role.ADMIN.name())
-            .authorities(Role.ADMIN.getAuthorities())
-            .build());
-        manager.createUser(User
-            .withUsername("user")
-            .password(passwordEncoder().encode("user"))
-            //.roles(Role.USER.name())
-            .authorities(Role.USER.getAuthorities())
-            .build());
-        manager.createUser(User
-            .withUsername("user1")
-            .password(passwordEncoder().encode("admin"))
-            .build());
-        return manager;
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(16);
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(16);
+    protected DaoAuthenticationProvider daoAuthenticationProvider() {
+        final DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        return daoAuthenticationProvider;
     }
 }

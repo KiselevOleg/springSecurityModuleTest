@@ -20,4 +20,6 @@ public class UserStatus {
     @Column(name = "id") private Long id;
 
     @Column(name = "name", length = 20, nullable = false, unique = true) private String name;
+
+    @Column(name = "has_grant_to_sing_in", nullable = false, unique = false) private Boolean hasGrantToSingIn;
 }
