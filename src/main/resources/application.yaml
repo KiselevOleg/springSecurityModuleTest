@@ -1,3 +1,13 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/testSecurity
+        username: springSecurityModuleTest
+        password: test
+        driverClassName: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        datasource.platform: org.hibernate.dialect.PostgreSQLDialect
 security:
     user:
         name: main_user
