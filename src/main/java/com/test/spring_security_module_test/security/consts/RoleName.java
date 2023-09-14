@@ -6,13 +6,15 @@ import lombok.Getter;
  * @author Kiselev Oleg
  */
 @Getter
-public enum PermissionName {
-    DEVELOPER_READ("developer_read"),
-    DEVELOPER_WRITE("developer_write");
+public enum RoleName {
+    ADMIN("admin"),
+    USER("user"),
+    VIEWER("viewer");
 
     private final String name;
 
-    PermissionName(final String name) {
+    RoleName(final String name) {
         this.name = name;
     }
+
 }

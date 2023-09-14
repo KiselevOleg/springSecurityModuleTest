@@ -2,7 +2,6 @@ package com.test.spring_security_module_test.config;
 
 import com.test.spring_security_module_test.security.consts.PermissionName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,7 +27,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityConfig(final @Qualifier("userDetailsServiceDatabase") UserDetailsService userDetailsService) {
+    public SecurityConfig(final UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -41,6 +40,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/**").hasAuthority(PermissionName.DEVELOPER_READ.getName())
                 .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
                 .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
+                .requestMatchers(HttpMethod.GET, "/authUser/addUser").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -63,8 +63,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(16);
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean

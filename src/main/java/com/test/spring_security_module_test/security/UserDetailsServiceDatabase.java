@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author Kiselev Oleg
  */
-@Service("userDetailsServiceDatabase")
+@Service
 public class UserDetailsServiceDatabase implements UserDetailsService {
     private final UserRepository userRepository;
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * @author Kiselev Oleg
  */
-@Service("developerService")
+@Service
 public class DeveloperService {
     private final DeveloperRepository repository;
 

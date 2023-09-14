@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * @author Kiselev Oleg
  */
-@Service("roleService")
+@Service
 public class RoleService {
     private final RoleRepository repository;
 
