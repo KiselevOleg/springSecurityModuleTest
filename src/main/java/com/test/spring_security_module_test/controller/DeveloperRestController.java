@@ -24,7 +24,9 @@ public class DeveloperRestController {
 
 
     @GetMapping("")
-    public List<Developer> getAll() { return developerService.findAll(); }
+    public List<Developer> getAll() {
+        return developerService.findAll();
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable final Long id) {
         return developerService.findById(id)

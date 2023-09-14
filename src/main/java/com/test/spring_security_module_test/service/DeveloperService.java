@@ -18,18 +18,24 @@ public class DeveloperService {
     @Autowired
     public DeveloperService(final DeveloperRepository repository) {
         this.repository = repository;
+        if (repository.findById(1L).isPresent()) {
+            return;
+        }
+        repository.save(new Developer(null, "firstname1", "secondname1"));
+        repository.save(new Developer(null, "firstname2", "secondname2"));
+        repository.save(new Developer(null, "firstname3", "secondname3"));
     }
 
     public Optional<Developer> findById(final Long id) {
         return repository.findById(id);
     }
     public List<Developer> findAll() {
-        List<Developer> list = new LinkedList<>();
+        final List<Developer> list = new LinkedList<>();
         repository.findAll().forEach(list::add);
         return list;
     }
 
-    public Boolean add(Developer developer) {
+    public Boolean add(final Developer developer) {
         if (repository.findById(developer.getId()).isPresent()) {
             return false;
         }
