@@ -1,4 +1,4 @@
-package com.test.spring_security_module_test.model.security_database;
+package com.test.spring_security_module_test.model.security;
 
 /**
  * @author Kiselev Oleg

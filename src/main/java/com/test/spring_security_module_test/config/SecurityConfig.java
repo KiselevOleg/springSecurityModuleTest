@@ -1,15 +1,15 @@
 package com.test.spring_security_module_test.config;
 
-import com.test.spring_security_module_test.security.consts.PermissionName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +22,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @SuppressWarnings({"PMD.MultipleStringLiterals", "PMD.AvoidDuplicateLiterals"})
 @EnableWebSecurity
 @Configuration
-//@EnableGlobalMethodSecurity
+@EnableMethodSecurity(
+    prePostEnabled = true, //pre/post annotations
+    securedEnabled = false, //@Secured
+    jsr250Enabled = false) //@RoleAllowed
+@ComponentScan("com.test.spring_security_module_test")
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
@@ -34,13 +38,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
+            //.csrf(AbstractHttpConfigurer::disable)
+            //.csrf(csrf -> csrf
+            //    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            //)
+            .rememberMe(session -> session
+                .key("$2a$10$VeSgeeOswluWMy1/j/B9M.4OYgF.iFiTuLNI6KomFz45W5XFDZhYW")
+                .tokenValiditySeconds(-1)
+                .rememberMeCookieName("Uyr6583hHFu9hwuer")
+            )
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/**").hasAuthority(PermissionName.DEVELOPER_READ.getName())
-                .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
-                .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
-                .requestMatchers(HttpMethod.GET, "/authUser/addUser").hasAuthority(PermissionName.DEVELOPER_WRITE.getName())
+                //.requestMatchers(HttpMethod.GET, "/api/**").hasAuthority(PermissionName.DEVELOPER_READ)
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

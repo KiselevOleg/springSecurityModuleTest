@@ -1,7 +1,7 @@
 package com.test.spring_security_module_test.security;
 
-import com.test.spring_security_module_test.model.security_database.User;
-import com.test.spring_security_module_test.repository.security_database.UserRepository;
+import com.test.spring_security_module_test.model.security.User;
+import com.test.spring_security_module_test.repository.security.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

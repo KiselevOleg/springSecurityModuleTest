@@ -1,5 +1,6 @@
-package com.test.spring_security_module_test.controller;
+package com.test.spring_security_module_test.controller.security;
 
+import com.test.spring_security_module_test.consts.ResetDatabaseConfig;
 import com.test.spring_security_module_test.util.ResetDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String getLoginPage() {
-        if (ResetDatabase.restActive) {
+        if (ResetDatabaseConfig.RESET_DATABASE_IS_ACTIVE) {
             resetDatabase.reset();
         }
         return "login";

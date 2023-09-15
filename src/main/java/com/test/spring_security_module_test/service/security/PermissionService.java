@@ -1,7 +1,7 @@
-package com.test.spring_security_module_test.service.security_database;
+package com.test.spring_security_module_test.service.security;
 
-import com.test.spring_security_module_test.model.security_database.Permission;
-import com.test.spring_security_module_test.repository.security_database.PermissionRepository;
+import com.test.spring_security_module_test.model.security.Permission;
+import com.test.spring_security_module_test.repository.security.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

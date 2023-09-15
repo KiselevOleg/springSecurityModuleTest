@@ -1,7 +1,7 @@
-package com.test.spring_security_module_test.service.security_database;
+package com.test.spring_security_module_test.service.security;
 
-import com.test.spring_security_module_test.model.security_database.Role;
-import com.test.spring_security_module_test.repository.security_database.RoleRepository;
+import com.test.spring_security_module_test.model.security.Role;
+import com.test.spring_security_module_test.repository.security.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

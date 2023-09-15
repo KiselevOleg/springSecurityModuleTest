@@ -1,6 +1,6 @@
-package com.test.spring_security_module_test.repository.security_database;
+package com.test.spring_security_module_test.repository.security;
 
-import com.test.spring_security_module_test.model.security_database.Permission;
+import com.test.spring_security_module_test.model.security.Permission;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,12 +1,12 @@
-package com.test.spring_security_module_test.service.security_database;
+package com.test.spring_security_module_test.service.security;
 
 import com.test.spring_security_module_test.config.SecurityConfig;
-import com.test.spring_security_module_test.model.security_database.User;
-import com.test.spring_security_module_test.repository.security_database.RoleRepository;
-import com.test.spring_security_module_test.repository.security_database.UserRepository;
-import com.test.spring_security_module_test.repository.security_database.UserStatusRepository;
-import com.test.spring_security_module_test.security.consts.RoleName;
-import com.test.spring_security_module_test.security.consts.UserStatusName;
+import com.test.spring_security_module_test.model.security.User;
+import com.test.spring_security_module_test.repository.security.RoleRepository;
+import com.test.spring_security_module_test.repository.security.UserRepository;
+import com.test.spring_security_module_test.repository.security.UserStatusRepository;
+import com.test.spring_security_module_test.consts.security.RoleName;
+import com.test.spring_security_module_test.consts.security.UserStatusName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +47,8 @@ public class UserService {
             new User(null,
                 name,
                 SecurityConfig.passwordEncoder().encode(password),
-                roleRepository.findByName(RoleName.VIEWER.getName()).orElseThrow(),
-                userStatusRepository.findByName(UserStatusName.UNACTIVE.getName()).orElseThrow()
+                roleRepository.findByName(RoleName.VIEWER).orElseThrow(),
+                userStatusRepository.findByName(UserStatusName.UNACTIVE).orElseThrow()
             )
         );
     }

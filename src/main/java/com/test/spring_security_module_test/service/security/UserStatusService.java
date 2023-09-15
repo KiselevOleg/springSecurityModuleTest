@@ -1,7 +1,7 @@
-package com.test.spring_security_module_test.service.security_database;
+package com.test.spring_security_module_test.service.security;
 
-import com.test.spring_security_module_test.model.security_database.UserStatus;
-import com.test.spring_security_module_test.repository.security_database.UserStatusRepository;
+import com.test.spring_security_module_test.model.security.UserStatus;
+import com.test.spring_security_module_test.repository.security.UserStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
