@@ -21,6 +21,6 @@ public class Developer {
     @Column(name = "second_name", length = 50, nullable = false, unique = false) private String secondName;
 
     public static Developer fromDTO(final DeveloperDTO developerDTO) {
-        return  new Developer(null, developerDTO.firstName(), developerDTO.secondName());
+        return new Developer(null, developerDTO.firstName(), developerDTO.secondName());
     }
 }
