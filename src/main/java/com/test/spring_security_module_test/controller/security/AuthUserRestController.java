@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @SuppressWarnings("PMD.SystemPrintln")
 @RestController
 @RequestMapping("/authUser")
-public class AuthUserController {
+public class AuthUserRestController {
     private final UserService userService;
 
     @Autowired
-    AuthUserController(final UserService userService) {
+    AuthUserRestController(final UserService userService) {
         this.userService = userService;
     }
 

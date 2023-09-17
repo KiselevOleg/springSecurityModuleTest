@@ -11,3 +11,7 @@ security:
         name: main_user
         password: password
         role: main_role
+    jwt:
+        header: Authorization
+        secretKey: $2a$10$WcGBF8iWgL4yZ.gYOPQ37O5FvCZyIVrNVEUq8oLtP8JzNaVR2hiLy
+        lifetimeBySeconds: 300

@@ -1,0 +1,3 @@
+curl -X POST -H "Content-Type: application/json" -d '{"name": "user", "password": "user"}' http://localhost:8080/api/auth/login
+
+curl -X GET -H "Authorization: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsInN1YiI6InVzZXIiLCJpYXQiOjE2OTQ5NDY4OTYsImV4cCI6MTY5NDk0NzE5Nn0.VdhF6nu5EpayOrJzF_WTG_O8UMb8ae6NtPCRnw6cWwI" http://localhost:8080/api/developers

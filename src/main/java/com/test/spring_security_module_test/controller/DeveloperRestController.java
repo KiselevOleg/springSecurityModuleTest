@@ -24,7 +24,6 @@ public class DeveloperRestController {
         this.developerService = developerService;
     }
 
-
     @GetMapping("")
     @PreAuthorize("hasAuthority('" + PermissionName.DEVELOPER_READ + "')")
     public List<Developer> getAll() {

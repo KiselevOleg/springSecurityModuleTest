@@ -1,20 +1,24 @@
 package com.test.spring_security_module_test.config;
 
+import com.test.spring_security_module_test.security.UserDetailsServiceDatabase;
+import com.test.spring_security_module_test.security.rest.TokenConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * @author Kiselev Oleg
@@ -28,46 +32,31 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
     jsr250Enabled = false) //@RoleAllowed
 @ComponentScan("com.test.spring_security_module_test")
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceDatabase userDetailsServiceDatabase;
+    private final TokenConfigurer tokenConfigurer;
 
     @Autowired
-    public SecurityConfig(final UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(final UserDetailsServiceDatabase userDetailsServiceDatabase,
+                          final TokenConfigurer tokenConfigurer) {
+        this.userDetailsServiceDatabase = userDetailsServiceDatabase;
+        this.tokenConfigurer = tokenConfigurer;
     }
 
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
-            //.csrf(AbstractHttpConfigurer::disable)
-            //.csrf(csrf -> csrf
-            //    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            //)
-            .rememberMe(session -> session
-                .key("$2a$10$VeSgeeOswluWMy1/j/B9M.4OYgF.iFiTuLNI6KomFz45W5XFDZhYW")
-                .tokenValiditySeconds(-1)
-                .rememberMeCookieName("Uyr6583hHFu9hwuer")
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/login").permitAll()
                 //.requestMatchers(HttpMethod.GET, "/api/**").hasAuthority(PermissionName.DEVELOPER_READ)
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
-            .formLogin(form -> form
-                .loginPage("/auth/login").permitAll()
-                .loginProcessingUrl("/auth/login")
-                .failureUrl("/auth/login")
-                .usernameParameter("username")
-                .passwordParameter("userpassword")
-                .defaultSuccessUrl("/auth/success")
-            )
-            .logout(form -> form
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-                    .deleteCookies("JSESSIONID")
-                    .logoutSuccessUrl("/auth/login")
-            )
-            .httpBasic(Customizer.withDefaults());
+            .apply(tokenConfigurer);
         return http.build();
     }
 
@@ -77,10 +66,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    protected DaoAuthenticationProvider daoAuthenticationProvider() {
-        final DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        return daoAuthenticationProvider;
+    public AuthenticationManager authenticationManager(final AuthenticationConfiguration authenticationConfiguration)
+        throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+    @Bean
+    @Primary
+    public AuthenticationManagerBuilder configureAuthenticationManagerBuilder(
+        final AuthenticationManagerBuilder authenticationManagerBuilder
+    ) throws Exception {
+        authenticationManagerBuilder.userDetailsService(userDetailsServiceDatabase).passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder;
     }
 }

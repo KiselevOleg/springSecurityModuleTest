@@ -30,6 +30,8 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
     implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
     runtimeOnly 'org.postgresql:postgresql'
 
