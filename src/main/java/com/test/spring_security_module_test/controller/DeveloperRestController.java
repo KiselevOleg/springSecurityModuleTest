@@ -1,5 +1,6 @@
 package com.test.spring_security_module_test.controller;
 
+import com.test.spring_security_module_test.dto.DeveloperDTO;
 import com.test.spring_security_module_test.model.Developer;
 import com.test.spring_security_module_test.consts.security.PermissionName;
 import com.test.spring_security_module_test.service.DeveloperService;
@@ -39,8 +40,8 @@ public class DeveloperRestController {
 
     @PostMapping("")
     @PreAuthorize("hasAuthority('" + PermissionName.DEVELOPER_WRITE + "')")
-    public ResponseEntity<?> create(@RequestBody final Developer developer) {
-        if (developerService.add(developer)) {
+    public ResponseEntity<?> create(@RequestBody final DeveloperDTO developerDTO) {
+        if (developerService.add(Developer.fromDTO(developerDTO))) {
             return ResponseEntity.status(HttpStatus.OK).body("success\n");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there already exists used id\n");

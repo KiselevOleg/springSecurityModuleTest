@@ -30,9 +30,9 @@ public class DeveloperService {
     }
 
     public Boolean add(final Developer developer) {
-        if (repository.findById(developer.getId()).isPresent()) {
+        /*if (repository.findById(developer.getId()).isPresent()) {
             return false;
-        }
+        }*/
 
         developer.setId(null);
         repository.save(developer);
